@@ -44,23 +44,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $active = null;
 
-    #[ORM\OneToMany(mappedBy: 'signinuser', targetEntity: SignIn::class)]
-    private Collection $usersignin;
-
-    #[ORM\OneToMany(mappedBy: 'signoutuser', targetEntity: SignOut::class)]
-    private Collection $usersignout;
-
     #[ORM\OneToMany(targetEntity: Entrada::class, mappedBy: 'user')]
     private $entrada;
 
     #[ORM\OneToMany(targetEntity: Salida::class, mappedBy: 'user')]
     private $salida;
-
-    public function __construct()
-    {
-        $this->usersignin = new ArrayCollection();
-        $this->usersignout = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -183,66 +171,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(bool $active): self
     {
         $this->active = $active;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, SignIn>
-     */
-    public function getUsersignin(): Collection
-    {
-        return $this->usersignin;
-    }
-
-    public function addUsersignin(SignIn $usersignin): self
-    {
-        if (!$this->usersignin->contains($usersignin)) {
-            $this->usersignin->add($usersignin);
-            $usersignin->setSigninuser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUsersignin(SignIn $usersignin): self
-    {
-        if ($this->usersignin->removeElement($usersignin)) {
-            // set the owning side to null (unless already changed)
-            if ($usersignin->getSigninuser() === $this) {
-                $usersignin->setSigninuser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, SignOut>
-     */
-    public function getUsersignout(): Collection
-    {
-        return $this->usersignout;
-    }
-
-    public function addUsersignout(SignOut $usersignout): self
-    {
-        if (!$this->usersignout->contains($usersignout)) {
-            $this->usersignout->add($usersignout);
-            $usersignout->setSignoutuser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUsersignout(SignOut $usersignout): self
-    {
-        if ($this->usersignout->removeElement($usersignout)) {
-            // set the owning side to null (unless already changed)
-            if ($usersignout->getSignoutuser() === $this) {
-                $usersignout->setSignoutuser(null);
-            }
-        }
 
         return $this;
     }
